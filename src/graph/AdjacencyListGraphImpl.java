@@ -1,58 +1,123 @@
 package graph;
 
+import graph.util.Vertex;
+
+import java.security.InvalidKeyException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 // TODO: implement
 public class AdjacencyListGraphImpl<T> implements Graph<T> {
+    private int n;
+    private int alpha;
+    private ArrayList<Vertex> vertexList;
+
+    public AdjacencyListGraphImpl(){
+        this.n = 0;
+        this.alpha = 0;
+        this.vertexList = new ArrayList();
+    }
 
     @Override
     public void addVertex(T x) {
-        throw new UnsupportedOperationException("TODO");
+        Vertex vertex = new Vertex(x);
+        vertexList.add(vertex);
+        n++;
     }
 
     @Override
     public boolean hasVertex(T v){
-        throw new UnsupportedOperationException("TODO");
+        for (int i = 0; i < vertexList.size(); i++) {
+            if (vertexList.get(i).getElement().equals(v)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void removeVertex(T x) {
-        throw new UnsupportedOperationException("TODO");
+            Vertex vertex = getVertex(x);
+            LinkedList<Vertex> ady = vertex.getAdys();
+            for (int i = 0; i < ady.size(); i++) {
+                ady.get(i).removeAdy(vertex);
+            }
+            vertexList.remove(vertex);
+            n--;
+    }
+
+    private Vertex<T> getVertex(T x) {
+        for (int i = 0; i < vertexList.size(); i++) {
+            if (vertexList.get(i).getElement().equals(x)){
+                return vertexList.get(i);
+            }
+        }
+        return null;
     }
 
     @Override
     public void addEdge(T v, T w) {
-        throw new UnsupportedOperationException("TODO");
+        if (hasVertex(v) && hasVertex(w)){
+            Vertex vertexV = getVertex(v);
+            Vertex vertexW = getVertex(w);
+            vertexV.addEdge(vertexW);
+            vertexW.addEdge(vertexV);
+            alpha++;
+        }
     }
 
     @Override
     public void removeEdge(T v, T w) {
-        throw new UnsupportedOperationException("TODO");
+        Vertex vertexV = getVertex(v);
+        Vertex vertexW = getVertex(w);
+        vertexV.removeEdge(vertexW);
+        vertexW.removeEdge(vertexV);
+        alpha--;
     }
 
     @Override
     public boolean hasEdge(T v, T w) {
-        throw new UnsupportedOperationException("TODO");
+        if (hasVertex(v) && hasVertex(w)){
+            Vertex vertexV = getVertex(v);
+            LinkedList<Vertex> adjacent = vertexV.getAdys();
+            for (int i = 0; i < adjacent.size(); i++) {
+                if (adjacent.get(i).getElement().equals(w)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
     public int order() {
-        throw new UnsupportedOperationException("TODO");
+        return n;
     }
 
     @Override
     public int alpha() {
-        throw new UnsupportedOperationException("TODO");
+        return alpha;
     }
 
     @Override
     public List<T> getVertexes() {
-        throw new UnsupportedOperationException("TODO");
+        LinkedList<T> toReturn = new LinkedList<>();
+        for (int i = 0; i < vertexList.size(); i++) {
+            toReturn.add((T) vertexList.get(i).getElement());
+        }
+        return toReturn;
     }
 
     @Override
     public List<T> getAdjacencyList(T v) {
-        throw new UnsupportedOperationException("TODO");
+        Vertex vertex = getVertex(v);
+        LinkedList<Vertex> list = vertex.getAdys();
+        LinkedList<T> toReturn = new LinkedList<>();
+        for (int i = 0; i < list.size(); i++) {
+            toReturn.add((T) list.get(i).getElement());
+        }
+        return toReturn;
     }
 
 }

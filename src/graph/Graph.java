@@ -1,5 +1,6 @@
 package graph;
 
+import java.security.InvalidKeyException;
 import java.util.List;
 
 public interface Graph<T> {
