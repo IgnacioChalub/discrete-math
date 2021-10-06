@@ -55,6 +55,15 @@ public class AdjacencyListGraphImpl<T> implements Graph<T> {
         return null;
     }
 
+    private int getVertexIndex(T v){
+        for (int i = 0; i < n; i++) {
+            if (vertexList.get(i).getElement().equals(v)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void addEdge(T v, T w) {
         if (hasVertex(v) && hasVertex(w)){
@@ -110,13 +119,11 @@ public class AdjacencyListGraphImpl<T> implements Graph<T> {
 
     @Override
     public List<T> getAdjacencyList(T v) {
-        Vertex vertex = getVertex(v);
-        LinkedList<Vertex> list = vertex.getAdys();
-        LinkedList<T> toReturn = new LinkedList<>();
-        for (int i = 0; i < list.size(); i++) {
-            toReturn.add((T) list.get(i).getElement());
-        }
-        return toReturn;
+       int vIndex = getVertexIndex(v);
+       if (vIndex == -1){
+           throw new IllegalArgumentException("Vertex not found");
+       }
+       return vertexList.get(vIndex).getAdys();
     }
 
 }
